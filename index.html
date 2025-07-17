@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <title>Ταξίδι Πρέβεζα 2025 – Ενιαία Σελίδα με Dropdown Επιλογή</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --main-bg: #f7fafc;
+      --main-text: #222;
+      --accent: #0099cc;
+      --tab-bg: #fff;
+      --tab-active: #e0f4ff;
+      --header-bg: #0099cc;
+      --header-text: #fff;
+      --card-bg: #fff;
+      --shadow: 0 2px 8px #0001;
+      --input-bg: #f7fafc;
+      --btn-bg: #0099cc;
+      --btn-text: #fff;
+      --danger: #e74c3c;
+    }
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: var(--main-bg);
+      color: var(--main-text);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 28px 12px 16px 12px;
+      text-align: center;
+      border-radius: 0 0 18px 18px;
+      font-size: 2em;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    main {
+      padding: 20px 15px 40px 15px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    label {
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+    select {
+      width: 100%;
+      font-size: 1em;
+      padding: 8px;
+      margin: 12px 0 20px 0;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      background: var(--input-bg);
+      color: var(--main-text);
+      cursor: pointer;
+    }
+    .tab-section {
+      display: none;
+    }
+    .tab-section.active {
+      display: block;
+      animation: fadeIn 0.35s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 18px;
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      font-size: 0.95em;
+    }
+    th, td {
+      padding: 10px 8px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: var(--tab-active);
+      color: var(--main-text);
+      font-weight: 700;
+    }
+    button {
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 5px;
+      padding: 10px 18px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    button:active {
+      background: #0077aa;
+    }
+    button.danger {
+      background: var(--danger);
+    }
+    input[type="text"], input[type="date"], input[type="number"], select, textarea {
+      width: 100%;
+      padding: 9px;
+      margin: 7px 0;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+      font-size: 1em;
+      background: var(--input-bg);
+      color: var(--main-text);
+    }
+    textarea {
+      resize: vertical;
+    }
+    .filter-bar { margin-bottom: 12px; display: flex; gap: 8px; }
+    .filter-btn { background: var(--tab-bg); color: var(--accent); border: 1px solid var(--accent); border-radius: 5px; padding: 6px 14px; font-size: 1em; cursor: pointer;}
+    .filter-btn.active { background: var(--accent); color: #fff; }
+    .place-list { list-style: none; padding: 0; }
+    .place-item { background: var(--card-bg); margin-bottom: 12px; border-radius: 8px; box-shadow: var(--shadow); padding: 12px; position: relative;}
+    .place-title { font-weight: bold; font-size: 1.1em; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;}
+    .place-actions { position: absolute; top: 10px; right: 12px; display: flex; gap: 8px; }
+    .action-btn { background: none; border: none; font-size: 1.2em; cursor: pointer; }
+    .gallery { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 6px; }
+    .gallery img { width: 78px; height: 78px; object-fit: cover; border-radius: 6px; border: 1.5px solid #e9f2fb; }
+    .edit-form { margin-top: 10px; background: var(--tab-active); border-radius: 7px; padding: 10px; }
+    .map-btn { background: #eee; color: var(--accent); border: none; border-radius: 4px; padding: 5px 13px; font-size: 0.95em; margin-left: 4px; cursor: pointer;}
+    .extra-expense-list { list-style: none; padding: 0; }
+    .extra-expense-item { background: var(--card-bg); margin-bottom: 10px; border-radius: 8px; box-shadow: var(--shadow); padding: 10px 12px; display: flex; align-items: center; gap: 10px;}
+    .extra-expense-total { font-weight: bold; font-size: 1.1em; color: var(--accent); margin-top: 12px; }
+    @media (max-width: 600px) {
+      header { font-size: 1.25em; }
+      th, td { font-size: 0.97em; }
+      button { font-size: 0.95em; padding: 8px 10px;}
+      .gallery img { width: 58px; height: 58px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Ταξίδι Πρέβεζα 2025 
+  </header>
+  <main>
+    <label for="tabSelect">Επίλεξε καρτέλα:</label>
+    <select id="tabSelect">
+      <option value="programma">📅 Πρόγραμμα</option>
+      <option value="exoda">💶 Έξοδα</option>
+      <option value="paralies">🏖️ Παραλίες & Τα μέρη μου</option>
+      <option value="epipleon_exoda">➕ Επιπλέον έξοδα</option>
+    </select>
+
+    <!-- Πρόγραμμα -->
+    <section id="programma" class="tab-section active">
+      <h2>Πρόγραμμα Ημερών Διακοπών</h2>
+      <table>
+        <tr><th>Ημέρα</th><th>Πρωί/Μεσημέρι</th><th>Απόγευμα/Βράδυ</th></tr>
+        <tr><td>12/8 (Τρίτη)</td><td>Άφιξη & Εγκατάσταση στο Camping</td><td>Χαλαρή βόλτα στην παραλία Μονολίθι</td></tr>
+        <tr><td>13/8 (Τετάρτη)</td><td>Μπάνιο σε παραλία (π.χ. Όρμος του Οδυσσέα)</td><td>Βόλτα στην πόλη της Πρέβεζας</td></tr>
+        <tr><td>14/8 (Πέμπτη)</td><td>Εκδρομή σε άλλη παραλία (π.χ. Αρτολίθια/Αλωνάκι)</td><td>Χαλάρωση, βραδινή έξοδος στο camping ή κοντά</td></tr>
+        <tr><td>15/8 (Παρασκευή)</td><td>Εκδρομή στα Σύβοτα</td><td>Βραδινή βόλτα/φαγητό στο camping</td></tr>
+        <tr><td>16/8 (Σάββατο)</td><td>Εκδρομή στις Πηγές Αχέροντα</td><td>Ξεκούραση, χαλάρωση στο camping</td></tr>
+        <tr><td>17/8 (Κυριακή)</td><td>Μπάνιο στη Λυγιά ή άλλη παραλία</td><td>Βόλτα/ποτό στην παραλία ή το camping</td></tr>
+        <tr><td>18/8 (Δευτέρα)</td><td>Μπάνιο στη Σκάλα (Αμμουδιά)</td><td>Βραδινή βόλτα</td></tr>
+        <tr><td>19/8 (Τρίτη)</td><td>Ελεύθερη μέρα / Προαιρετική εκδρομή</td><td>Ελεύθερο πρόγραμμα</td></tr>
+        <tr><td>20/8 (Τετάρτη)</td><td>Αναχώρηση</td><td>-</td></tr>
+      </table>
+    </section>
+
+    <!-- Έξοδα -->
+    <section id="exoda" class="tab-section">
+      <h2>Αναλυτικός Πίνακας Εξόδων</h2>
+      <table>
+        <tr><th>Κατηγορία</th><th>Ποσό (€)</th></tr>
+        <tr><td>Διόδια (μετ’ επιστροφής)</td><td>76,20</td></tr>
+        <tr><td>Διαμονή</td><td>160,00</td></tr>
+        <tr><td>Φαγητό (8 ημέρες x 60 €/ημέρα)</td><td>480,00</td></tr>
+        <tr><td>Καύσιμα Αθήνα–Πρέβεζα–Αθήνα</td><td>134,05</td></tr>
+        <tr><td>Καύσιμα Πρέβεζα–Σύβοτα–Πρέβεζα</td><td>33,59</td></tr>
+        <tr><td>Καύσιμα Πρέβεζα–Πηγές Αχέροντα–Πρέβεζα</td><td>20,99</td></tr>
+        <tr><td>Καύσιμα Πρέβεζα (παραλία)</td><td>5,01</td></tr>
+        <tr><td>Αρτολίθια (καύσιμα, πήγαινε-έλα)</td><td>5,39</td></tr>
+        <tr><td>Όρμος του Οδυσσέα (καύσιμα, πήγαινε-έλα)</td><td>6,16</td></tr>
+        <tr><td>Αλωνάκι (καύσιμα, πήγαινε-έλα)</td><td>7,32</td></tr>
+        <tr><td>Σκάλα/Αμμουδιά (καύσιμα, πήγαινε-έλα)</td><td>12,33</td></tr>
+        <tr><td>Λυγιά (καύσιμα, πήγαινε-έλα)</td><td>8,86</td></tr>
+        <tr><td><strong>Σύνολο</strong></td><td><strong>949,90</strong></td></tr>
+        <tr><td><strong>Απρόβλεπτα έξοδα (10%)</strong></td><td><strong>94,99</strong></td></tr>
+        <tr><td><strong>Τελικό σύνολο</strong></td><td><strong>1.044,89</strong></td></tr>
+      </table>
+      <button onclick="exportCSV()">Εξαγωγή εξόδων σε CSV</button>
+    </section>
+
+    <!-- Παραλίες & Τα μέρη μου -->
+    <section id="paralies" class="tab-section">
+      <h2>Παραλίες & Κόστος Βενζίνης (σταθερές εγγραφές)</h2>
+      <table>
+        <tr>
+          <th>Παραλία</th>
+          <th>Απόσταση (χλμ)</th>
+          <th>Κόστος βενζίνης (€)</th>
+          <th>Χάρτης</th>
+        </tr>
+        <tr>
+          <td>Αρτολίθια 🏝️</td><td>28</td><td>5,39</td>
+          <td><a class="map-btn" href="https://www.google.com/maps?q=39.114986233448626,20.607195636710788&z=15" target="_blank">Χάρτης</a></td>
+        </tr>
+        <tr>
+          <td>Όρμος του Οδυσσέα 🏖️</td><td>32</td><td>6,16</td>
+          <td><a class="map-btn" href="https://www.google.com/maps?q=39.21648828227805,20.48718886684315&z=15" target="_blank">Χάρτης</a></td>
+        </tr>
+        <tr>
+          <td>Αλωνάκι 🏝️</td><td>38</td><td>7,32</td>
+          <td><a class="map-btn" href="https://www.google.com/maps?q=39.00017997994942,20.72963790626479&z=15" target="_blank">Χάρτης</a></td>
+        </tr>
+        <tr>
+          <td>Σκάλα (Αμμουδιά) 🏖️</td><td>64</td><td>12,33</td>
+          <td><a class="map-btn" href="https://www.google.com/maps?q=39.212631268916866,20.490536263650814&z=15" target="_blank">Χάρτης</a></td>
+        </tr>
+        <tr>
+          <td>Λυγιά 🏝️</td><td>46</td><td>8,86</td>
+          <td><a class="map-btn" href="https://www.google.com/maps?q=39.16040210258703,20.562154978232776&z=15" target="_blank">Χάρτης</a></td>
+        </tr>
+      </table>
+
+      <h3 style="margin-top:32px;">Παραλίες που πρόσθεσες εσύ (πήγαινέ-έλα)</h3>
+      <table id="beachesTable">
+        <tr><th>Παραλία</th><th>Απόσταση (χλμ, πηγαινέ-έλα)</th><th>Κόστος βενζίνης (€)</th><th>Χάρτης</th></tr>
+      </table>
+
+      <h3 style="margin-top:40px;">🔎 Αναζήτηση Παραλίας (Open-Meteo)</h3>
+      <input id="beachSearchInput" class="input" type="text" placeholder="Γράψε όνομα παραλίας (ελληνικά)">
+      <button onclick="searchBeachOpenMeteo()">Αναζήτηση</button>
+      <ul id="beachResults" class="place-list"></ul>
+
+      <h3 style="margin-top:40px;">📍 Όλα τα μέρη που επισκέφθηκες</h3>
+      <form id="placeForm" autocomplete="off">
+        <input type="text" id="placeName" class="input" placeholder="Όνομα μέρους" required>
+        <select id="placeCategory" class="input">
+          <option value="beach">Παραλία 🏖️</option>
+          <option value="sight">Αξιοθέατο 🏛️</option>
+          <option value="food">Φαγητό 🍽️</option>
+          <option value="other">Άλλο 📍</option>
+        </select>
+        <input type="date" id="visitDate" class="input">
+        <textarea id="placeNotes" class="input" rows="2" placeholder="Σημειώσεις"></textarea>
+        <input type="file" id="placePhoto" class="input" multiple accept="image/*">
+        <input type="hidden" id="placeLat">
+        <input type="hidden" id="placeLon">
+        <button type="submit" class="btn">Αποθήκευση μέρους</button>
+      </form>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="setPlaceFilter('all')">Όλα</button>
+        <button class="filter-btn" onclick="setPlaceFilter('beach')">Παραλίες 🏖️</button>
+        <button class="filter-btn" onclick="setPlaceFilter('sight')">Αξιοθέατα 🏛️</button>
+        <button class="filter-btn" onclick="setPlaceFilter('food')">Φαγητό 🍽️</button>
+        <button class="filter-btn" onclick="setPlaceFilter('other')">Άλλο 📍</button>
+      </div>
+      <ul id="placeList" class="place-list"></ul>
+    </section>
+
+    <!-- Επιπλέον έξοδα -->
+    <section id="epipleon_exoda" class="tab-section">
+      <h2>➕ Επιπλέον Έξοδα</h2>
+      <form id="extraExpenseForm" autocomplete="off">
+        <input type="text" id="extraExpenseDesc" class="input" placeholder="Περιγραφή (π.χ. παγωτό, πάρκινγκ)">
+        <input type="number" id="extraExpenseAmount" class="input" placeholder="Ποσό (€)" min="0.01" step="0.01" required>
+        <button type="submit" class="btn">Προσθήκη εξόδου</button>
+      </form>
+      <ul id="extraExpenseList" class="extra-expense-list"></ul>
+      <div id="extraExpenseTotal" class="extra-expense-total"></div>
+    </section>
+  </main>
+  <script>
+    // Dropdown navigation
+    document.getElementById('tabSelect').addEventListener('change', function() {
+      var val = this.value;
+      document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(val).classList.add('active');
+      // extra renders
+      if(val === 'exoda') renderExtraExpenses();
+      if(val === 'paralies') { renderPlaces(); renderBeachesTable(); }
+      if(val === 'epipleon_exoda') renderExtraExpenses();
+    });
+
+    // --- Έξοδα CSV ---
+    function exportCSV() {
+      const rows = [
+        ["Κατηγορία","Ποσό (€)"],
+        ["Διόδια (μετ’ επιστροφής)","76,20"],
+        ["Διαμονή","160,00"],
+        ["Φαγητό (8 ημέρες x 60 €/ημέρα)","480,00"],
+        ["Καύσιμα Αθήνα–Πρέβεζα–Αθήνα","134,05"],
+        ["Καύσιμα Πρέβεζα–Σύβοτα–Πρέβεζα","33,59"],
+        ["Καύσιμα Πρέβεζα–Πηγές Αχέροντα–Πρέβεζα","20,99"],
+        ["Καύσιμα Πρέβεζα (παραλία)","5,01"],
+        ["Αρτολίθια (καύσιμα, πήγαινε-έλα)","5,39"],
+        ["Όρμος του Οδυσσέα (καύσιμα, πήγαινε-έλα)","6,16"],
+        ["Αλωνάκι (καύσιμα, πήγαινε-έλα)","7,32"],
+        ["Σκάλα/Αμμουδιά (καύσιμα, πήγαινε-έλα)","12,33"],
+        ["Λυγιά (καύσιμα, πήγαινε-έλα)","8,86"],
+        ["Σύνολο","949,90"],
+        ["Απρόβλεπτα έξοδα (10%)","94,99"],
+        ["Τελικό σύνολο","1.044,89"]
+      ];
+      let csv = rows.map(r => r.map(x => `"${x}"`).join(',')).join('\n');
+      let blob = new Blob([csv], {type: 'text/csv'});
+      let a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'exoda.csv';
+      a.click();
+    }
+
+    // --- Παραλίες & Τα μέρη μου ---
+
+    function loadPlaces() { return JSON.parse(localStorage.getItem('my_places') || "[]"); }
+    function savePlaces(places) { localStorage.setItem('my_places', JSON.stringify(places)); }
+    let placeFilter = 'all', editIdx = null;
+
+    function renderBeachesTable() {
+      const places = loadPlaces();
+      const beaches = places.filter(p => p.category === 'beach');
+      const table = document.getElementById('beachesTable');
+      table.innerHTML = `<tr><th>Παραλία</th><th>Απόσταση (χλμ, πηγαινέ-έλα)</th><th>Κόστος βενζίνης (€)</th><th>Χάρτης</th></tr>`;
+      beaches.forEach(beach => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${beach.name || ''}</td>
+          <td>${beach.distance || ''}</td>
+          <td>${beach.cost || ''}</td>
+          <td>${(beach.lat && beach.lon) ? `<a class="map-btn" href="https://www.google.com/maps?q=${beach.lat},${beach.lon}&z=15" target="_blank">Χάρτης</a>` : ''}</td>
+        `;
+        table.appendChild(tr);
+      });
+    }
+
+    function setPlaceFilter(val) {
+      placeFilter = val;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        if (btn.textContent.includes(val.charAt(0).toUpperCase() + val.slice(1)) || (val === 'all' && btn.textContent === 'Όλα')) btn.classList.add('active');
+        if (val === 'beach' && btn.textContent.includes('Παραλίες')) btn.classList.add('active');
+        if (val === 'sight' && btn.textContent.includes('Αξιοθέατα')) btn.classList.add('active');
+        if (val === 'food' && btn.textContent.includes('Φαγητό')) btn.classList.add('active');
+        if (val === 'other' && btn.textContent.includes('Άλλο')) btn.classList.add('active');
+      });
+      renderPlaces();
+      renderBeachesTable();
+    }
+
+    function categoryEmoji(cat) {
+      if (cat === 'beach') return '🏖️';
+      if (cat === 'sight') return '🏛️';
+      if (cat === 'food') return '🍽️';
+      return '📍';
+    }
+
+    function renderPlaces() {
+      const list = document.getElementById('placeList');
+      list.innerHTML = '';
+      const places = loadPlaces();
+      let filtered = places;
+      if (placeFilter !== 'all') filtered = places.filter(p => p.category === placeFilter);
+      filtered.forEach((place, idx) => {
+        const li = document.createElement('li');
+        li.className = 'place-item';
+        if (editIdx === idx) {
+          li.innerHTML = `
+            <form class="edit-form" onsubmit="return false;">
+              <input class="input" type="text" id="editPlaceName" value="${place.name || ''}" required>
+              <select class="input" id="editPlaceCategory">
+                <option value="beach" ${place.category === 'beach' ? 'selected' : ''}>Παραλία 🏖️</option>
+                <option value="sight" ${place.category === 'sight' ? 'selected' : ''}>Αξιοθέατο 🏛️</option>
+                <option value="food" ${place.category === 'food' ? 'selected' : ''}>Φαγητό 🍽️</option>
+                <option value="other" ${place.category === 'other' ? 'selected' : ''}>Άλλο 📍</option>
+              </select>
+              <input class="input" type="date" id="editVisitDate" value="${place.date || ''}">
+              <textarea class="input" id="editPlaceNotes" rows="2">${place.notes || ''}</textarea>
+              <input class="input" type="file" id="editPlacePhoto" accept="image/*" multiple>
+              <button class="btn" onclick="saveEditPlace(${idx})">Αποθήκευση</button>
+              <button class="btn danger" onclick="cancelEditPlace()">Άκυρο</button>
+            </form>`;
+        } else {
+          li.innerHTML = `
+            <div class="place-title">${categoryEmoji(place.category)} ${place.name ? place.name : ''} ${place.date ? `<span style="font-size:0.9em;color:#888;">(${place.date})</span>` : ''}</div>
+            <div style="margin-bottom:4px;">${place.notes ? place.notes : ''}</div>
+            <div>
+              ${place.distance ? `<span>Απόσταση: <b>${place.distance} χλμ</b></span> &nbsp;` : ''}
+              ${place.cost ? `<span>Κόστος βενζίνης: <b>${place.cost} €</b></span> &nbsp;` : ''}
+              ${(place.lat && place.lon) ? `<a href="https://www.google.com/maps?q=${place.lat},${place.lon}&z=15" target="_blank" style="margin-left:10px;">Χάρτης</a>` : ''}
+            </div>
+            <div class="gallery">${place.photos && place.photos.length ? place.photos.map(src => `<img src="${src}" alt="photo">`).join('') : ''}</div>
+            <div class="place-actions">
+              <button class="action-btn" title="Επεξεργασία" onclick="editPlace(${idx})">✏️</button>
+              <button class="action-btn" title="Προσθήκη φωτογραφίας" onclick="addPhotoPlace(${idx})">📷</button>
+              <button class="action-btn" title="Διαγραφή" onclick="deletePlace(${idx})">🗑️</button>
+            </div>
+          `;
+        }
+        list.appendChild(li);
+      });
+    }
+
+    function editPlace(idx) {
+      editIdx = idx;
+      renderPlaces();
+    }
+    function cancelEditPlace() {
+      editIdx = null;
+      renderPlaces();
+    }
+    function saveEditPlace(idx) {
+      const places = loadPlaces();
+      const name = document.getElementById('editPlaceName').value.trim();
+      const category = document.getElementById('editPlaceCategory').value;
+      const date = document.getElementById('editVisitDate').value;
+      const notes = document.getElementById('editPlaceNotes').value.trim();
+      const files = document.getElementById('editPlacePhoto').files;
+      if (name) {
+        places[idx].name = name;
+        places[idx].category = category;
+        places[idx].date = date;
+        places[idx].notes = notes;
+        if (files.length) {
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (file.type.startsWith('image/')) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                places[idx].photos = places[idx].photos || [];
+                places[idx].photos.push(e.target.result);
+                savePlaces(places);
+                editIdx = null;
+                renderPlaces();
+                renderBeachesTable();
+              };
+              reader.readAsDataURL(file);
+              return;
+            }
+          }
+        }
+        savePlaces(places);
+        editIdx = null;
+        renderPlaces();
+        renderBeachesTable();
+      }
+    }
+
+    function addPhotoPlace(idx) {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.multiple = true;
+      input.onchange = async function () {
+        const files = input.files;
+        if (files.length) {
+          const places = loadPlaces();
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (file.type.startsWith('image/')) {
+              const dataUrl = await new Promise(res => {
+                const reader = new FileReader();
+                reader.onload = e => res(e.target.result);
+                reader.readAsDataURL(file);
+              });
+              places[idx].photos = places[idx].photos || [];
+              places[idx].photos.push(dataUrl);
+            }
+          }
+          savePlaces(places);
+          renderPlaces();
+          renderBeachesTable();
+        }
+      };
+      input.click();
+    }
+
+    function deletePlace(idx) {
+      const places = loadPlaces();
+      places.splice(idx, 1);
+      savePlaces(places);
+      renderPlaces();
+      renderBeachesTable();
+    }
+
+    document.getElementById('placeForm').onsubmit = async function (e) {
+      e.preventDefault();
+      const name = document.getElementById('placeName').value.trim();
+      const category = document.getElementById('placeCategory').value;
+      const date = document.getElementById('visitDate').value;
+      const notes = document.getElementById('placeNotes').value.trim();
+      const files = document.getElementById('placePhoto').files;
+      const photos = [];
+      let lat = document.getElementById('placeLat').value || undefined;
+      let lon = document.getElementById('placeLon').value || undefined;
+      if (files.length) {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file.type.startsWith('image/')) {
+            const dataUrl = await new Promise(res => {
+              const reader = new FileReader();
+              reader.onload = e => res(e.target.result);
+              reader.readAsDataURL(file);
+            });
+            photos.push(dataUrl);
+          }
+        }
+      }
+      let entry = { name, category, date, notes, photos };
+      if (category === 'beach' && lat && lon) {
+        const campingLat = 39.03429886578638, campingLon = 20.71407961748482;
+        const beachLat = parseFloat(lat), beachLon = parseFloat(lon);
+        const consumption = 7, fuelPrice = 1.75;
+        const distanceOneWay = haversine(campingLat, campingLon, beachLat, beachLon);
+        const distance = (distanceOneWay * 2).toFixed(1);
+        const cost = ((distance / 100) * consumption * fuelPrice).toFixed(2);
+        entry.lat = beachLat;
+        entry.lon = beachLon;
+        entry.distance = distance;
+        entry.cost = cost;
+      }
+      const places = loadPlaces();
+      places.unshift(entry);
+      savePlaces(places);
+      this.reset();
+      document.getElementById('placeLat').value = '';
+      document.getElementById('placeLon').value = '';
+      renderPlaces();
+      renderBeachesTable();
+    };
+
+    function haversine(lat1, lon1, lat2, lon2) {
+      const R = 6371; // km
+      const toRad = deg => deg * Math.PI / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function searchBeachOpenMeteo() {
+      const input = document.getElementById('beachSearchInput');
+      const resultsList = document.getElementById('beachResults');
+      let query = input.value.trim();
+      if (!query) {
+        resultsList.innerHTML = '';
+        return;
+      }
+      resultsList.innerHTML = '<li>Αναζήτηση...</li>';
+      const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&country=GR&language=el&format=json`;
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.results || !data.results.length) {
+            resultsList.innerHTML = '<li>Δεν βρέθηκε παραλία ή τοπωνύμιο με αυτό το όνομα στην Ελλάδα.</li>';
+            return;
+          }
+          resultsList.innerHTML = data.results.map(loc => `
+            <li class="place-item">
+              <div>🏖️ ${loc.name}${loc.admin1 ? `, ${loc.admin1}` : ''}${loc.country ? `, ${loc.country}` : ''}</div>
+              <div>Συντεταγμένες: <b>${loc.latitude}, ${loc.longitude}</b></div>
+              <button onclick="window.open('https://www.openstreetmap.org/?mlat=${loc.latitude}&mlon=${loc.longitude}&zoom=15','_blank')">Χάρτης</button>
+              <button style="background:#20b46a;color:#fff;" onclick='addBeachToPlaces({
+                "display_name":"${loc.name}${loc.admin1 ? ', '+loc.admin1 : ''}${loc.country ? ', '+loc.country : ''}",
+                "lat":${loc.latitude},
+                "lon":${loc.longitude}
+              })'>Προσθήκη</button>
+            </li>
+          `).join('');
+        })
+        .catch(() => {
+          resultsList.innerHTML = '<li>Σφάλμα σύνδεσης με Open-Meteo API.</li>';
+        });
+    }
+
+    function addBeachToPlaces(loc) {
+      const campingLat = 39.03429886578638, campingLon = 20.71407961748482;
+      const beachLat = parseFloat(loc.lat), beachLon = parseFloat(loc.lon);
+      const distanceOneWay = haversine(campingLat, campingLon, beachLat, beachLon);
+      const distance = (distanceOneWay * 2).toFixed(1); // πηγαινέ-έλα
+      const consumption = 7, fuelPrice = 1.75;
+      const cost = ((distance / 100) * consumption * fuelPrice).toFixed(2);
+      const places = loadPlaces();
+      if (places.some(p => p.name === loc.display_name && p.lat == beachLat && p.lon == beachLon)) {
+        alert("Το μέρος υπάρχει ήδη στη λίστα!");
+        return;
+      }
+      places.unshift({
+        name: loc.display_name,
+        category: 'beach',
+        date: '', notes: '',
+        distance, cost, lat: beachLat, lon: beachLon, photos: []
+      });
+      savePlaces(places);
+      alert("Το μέρος προστέθηκε στα 'Μέρη μου'!");
+      renderPlaces();
+      renderBeachesTable();
+    }
+
+    // Επιπλέον έξοδα
+    function saveExtraExpenses(list) {
+      localStorage.setItem('my_extra_expenses', JSON.stringify(list));
+    }
+    function loadExtraExpenses() {
+      return JSON.parse(localStorage.getItem('my_extra_expenses') || "[]");
+    }
+    function renderExtraExpenses() {
+      const listEl = document.getElementById('extraExpenseList');
+      listEl.innerHTML = '';
+      const list = loadExtraExpenses();
+      let total = 0;
+      list.forEach((item, idx) => {
+        total += Number(item.amount) || 0;
+        const li = document.createElement('li');
+        li.className = 'extra-expense-item';
+        li.innerHTML = `
+          <span>${item.desc ? item.desc : '—'}</span>
+          <span style="margin-left:auto;">${Number(item.amount).toFixed(2)} €</span>
+          <button class="btn danger" onclick="deleteExtraExpense(${idx})">✗</button>
+        `;
+        listEl.appendChild(li);
+      });
+      document.getElementById('extraExpenseTotal').textContent = "Σύνολο επιπλέον εξόδων: " + total.toFixed(2) + " €";
+    }
+    function deleteExtraExpense(idx) {
+      const list = loadExtraExpenses();
+      list.splice(idx, 1);
+      saveExtraExpenses(list);
+      renderExtraExpenses();
+    }
+    document.getElementById('extraExpenseForm').onsubmit = function (e) {
+      e.preventDefault();
+      const desc = document.getElementById('extraExpenseDesc').value.trim();
+      const amount = document.getElementById('extraExpenseAmount').value;
+      if (!amount || isNaN(amount) || Number(amount) <= 0) return;
+      const list = loadExtraExpenses();
+      list.unshift({ desc, amount });
+      saveExtraExpenses(list);
+      this.reset();
+      renderExtraExpenses();
+    };
+
+    // Εκκίνηση
+    renderPlaces();
+    renderBeachesTable();
+    renderExtraExpenses();
+  </script>
+</body>
+</html>
